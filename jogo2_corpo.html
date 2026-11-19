@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo 2: Body & Head Detective - Inglês 3º Ano</title>
+  
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --primary: #6C5CE7;
+    --primary-dark: #5649C0;
+    --secondary: #00CEC9;
+    --accent: #FD79A8;
+    --yellow: #FDCB6E;
+    --green: #00B894;
+    --red: #FF7675;
+    --bg: #F4F7FE;
+    --card: #FFFFFF;
+    --text: #2D3436;
+    --muted: #636E72;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #E0C3FC 0%, #8EC5FC 100%);
+    min-height: 100vh;
+    color: var(--text);
+    padding: 20px;
+  }
+
+  h1, h2, h3, .brand {
+    font-family: 'Fredoka', sans-serif;
+  }
+
+  .container {
+    max-width: 1050px;
+    margin: 0 auto;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    padding: 14px 24px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+  }
+
+  .btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.12);
+  }
+
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-secondary { background: var(--secondary); color: #fff; }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .btn-yellow { background: var(--yellow); color: #2D3436; }
+  .btn-green { background: var(--green); color: #fff; }
+  .btn-light { background: #EDF2F7; color: var(--text); }
+
+  .panel {
+    background: var(--card);
+    border-radius: 26px;
+    padding: 28px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+  }
+
+  .score-pill {
+    background: #FFF3CD;
+    color: #856404;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-family: 'Fredoka', sans-serif;
+    border: 2px solid #FFEEBA;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .feedback-box {
+    margin-top: 16px;
+    padding: 16px 22px;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: none;
+    text-align: center;
+    line-height: 1.45;
+  }
+  .feedback-ok { background: #D4EDDA; color: #155724; border: 2px solid #C3E6CB; display: block; }
+  .feedback-err { background: #F8D7DA; color: #721C24; border: 2px solid #F5C6CB; display: block; }
+
+  @keyframes pop {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+  .pop { animation: pop 0.25s ease; }
+</style>
+
+  <style>
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 12px 20px;
+      border-radius: 16px;
+      border: 3px solid transparent;
+      background: white;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .tab-btn.active {
+      border-color: var(--secondary);
+      color: #008B8B;
+      background: #E6FFFA;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .body-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+    }
+    .body-card {
+      background: #F8FAFC;
+      border: 2px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 14px;
+      text-align: center;
+      transition: 0.15s;
+    }
+    .body-card:hover {
+      border-color: var(--secondary);
+      transform: translateY(-3px);
+      background: #E6FFFA;
+    }
+
+    /* Unscramble estilo livro */
+    .unscramble-box {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #F8FAFC;
+      border-radius: 24px;
+      padding: 28px;
+      text-align: center;
+      border: 3px solid #E2E8F0;
+    }
+    .scrambled-tiles {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 18px 0;
+      flex-wrap: wrap;
+    }
+    .tile {
+      background: #FEF3C7;
+      border: 3px solid #F59E0B;
+      color: #92400E;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      width: 52px;
+      height: 52px;
+      line-height: 46px;
+      border-radius: 14px;
+      box-shadow: 0 4px 0 #D97706;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tile:hover { transform: scale(1.06); }
+    .word-input {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.6rem;
+      text-align: center;
+      padding: 12px 20px;
+      border-radius: 16px;
+      border: 3px solid #CBD5E0;
+      width: 100%;
+      max-width: 320px;
+      text-transform: lowercase;
+      outline: none;
+      margin-bottom: 14px;
+    }
+    .word-input:focus {
+      border-color: var(--secondary);
+    }
+
+    /* Match Quiz */
+    .match-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 620px;
+      margin: 20px auto 0 auto;
+    }
+    .opt-btn {
+      padding: 16px;
+      font-size: 1.2rem;
+      font-family: 'Fredoka', sans-serif;
+      border-radius: 18px;
+      border: 3px solid #E2E8F0;
+      background: white;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .opt-btn:hover:not(:disabled) { border-color: var(--secondary); background: #E6FFFA; }
+    .opt-btn:disabled { cursor: default; opacity: 0.92; }
+    .opt-btn.correct { background: #00B894 !important; color: white !important; border-color: #00B894 !important; }
+    .opt-btn.wrong { background: #FF7675 !important; color: white !important; border-color: #FF7675 !important; }
+
+    .next-row {
+      margin-top: 14px;
+      display: none;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <a href="ingles.html" class="brand">⬅️ Voltar para Inglês</a>
+      <div class="nav-buttons">
+        <a href="index.html" class="btn btn-light">🏠 Capa</a>
+        <div class="score-pill" id="gameScore">Pontos: 0 | ⭐ 0/3</div>
+      </div>
+    </header>
+
+    <div class="panel">
+      <div style="margin-bottom:14px;">
+        <span class="badge" style="background:#E6FFFA; color:#008B8B;">Jogo 2 • Head & Body Parts</span>
+        <h1 style="font-size:1.9rem; color:#008B8B; margin-top:4px;">🧍‍♀️ Body & Head Detective</h1>
+        <p style="color:var(--muted);">Revise todas as partes da cabeça e do corpo do livro, jogue o Match e escreva as palavras desembaralhadas (Unscramble)!</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-map', this)">1️⃣ Quadro de Revisão (22 partes)</button>
+        <button class="tab-btn" onclick="switchTab('tab-match', this)">2️⃣ Match the Body Parts</button>
+        <button class="tab-btn" onclick="switchTab('tab-unscramble', this)">3️⃣ Unscramble (Escrever palavra)</button>
+      </div>
+
+      <!-- TAB 1: TODAS AS PARTES DO CORPO E CABEÇA -->
+      <div id="tab-map" class="tab-content active">
+        <h3 style="margin-bottom:10px; color:var(--primary);">🗣️ Head Parts (Partes da Cabeça e Rosto)</h3>
+        <div class="body-grid" id="headGrid" style="margin-bottom:24px;"></div>
+
+        <h3 style="margin-bottom:10px; color:#008B8B;">💪 Body Parts (Partes do Corpo)</h3>
+        <div class="body-grid" id="bodyGrid"></div>
+      </div>
+
+      <!-- TAB 2: MATCH THE WORDS -->
+      <div id="tab-match" class="tab-content" style="text-align:center;">
+        <span class="badge" style="background:#EDF2F7;" id="matchCounter">Pergunta 1 de 12</span>
+        <div style="font-size:5rem; margin:14px 0;" id="matchEmoji">👂</div>
+        <h2 id="matchClue">Qual parte do corpo é esta? (Orelha)</h2>
+        <div class="match-grid" id="matchOptions"></div>
+        <div id="matchFeedback" class="feedback-box" style="max-width:620px; margin:16px auto 0 auto;"></div>
+        <div id="matchNextRow" class="next-row">
+          <button class="btn btn-secondary" onclick="advanceMatch()">Próxima Pergunta ➡️</button>
+        </div>
+      </div>
+
+      <!-- TAB 3: UNSCRAMBLE (IGUAL AO EXERCÍCIO DO LIVRO) -->
+      <div id="tab-unscramble" class="tab-content">
+        <div class="unscramble-box">
+          <span class="badge" style="background:#FEF3C7; color:#92400E;" id="unscrambleCounter">Palavra 1 de 9</span>
+          <div style="font-size:4.5rem; margin:10px 0;" id="unscrambleEmoji">👅</div>
+          <p style="font-weight:700; color:var(--muted);" id="unscrambleHint">Dica: Língua</p>
+          <p style="font-size:0.9rem; color:var(--muted);">Clique nas letras ou digite a palavra correta em inglês:</p>
+          <div class="scrambled-tiles" id="scrambledTiles"></div>
+          <div>
+            <input type="text" id="unscrambleInput" class="word-input" placeholder="Digite aqui..." autocomplete="off">
+          </div>
+          <div id="unscrambleActions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-light" onclick="document.getElementById('unscrambleInput').value=''">🧹 Limpar</button>
+            <button class="btn btn-secondary" onclick="checkUnscramble()">✅ Conferir Resposta</button>
+          </div>
+          <div id="unscrambleFeedback" class="feedback-box"></div>
+          <div id="unscrambleNextRow" class="next-row">
+            <button class="btn btn-secondary" onclick="advanceUnscramble()">Próxima Palavra ➡️</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+<script>
+  function saveStars(gameKey, stars) {
+    const data = JSON.parse(localStorage.getItem('marina_portal_3ano') || '{}');
+    if (!data[gameKey] || stars > data[gameKey]) {
+      data[gameKey] = stars;
+      localStorage.setItem('marina_portal_3ano', JSON.stringify(data));
+    }
+  }
+
+  function getStars(gameKey) {
+    const data = JSON.parse(localStorage.getItem('marina_portal_3ano') || '{}');
+    return data[gameKey] || 0;
+  }
+</script>
+
+  <script>
+    const HEAD_PARTS = [
+      { en: "hair", pt: "cabelo", emoji: "💇‍♀️" },
+      { en: "eyebrow", pt: "sobrancelha", emoji: "🤨" },
+      { en: "forehead", pt: "testa", emoji: "💆‍♀️" },
+      { en: "eyes", pt: "olhos", emoji: "👀" },
+      { en: "ear", pt: "orelha", emoji: "👂" },
+      { en: "nose", pt: "nariz", emoji: "👃" },
+      { en: "cheek", pt: "bochecha", emoji: "😊" },
+      { en: "mouth", pt: "boca", emoji: "👄" },
+      { en: "teeth", pt: "dentes", emoji: "🦷" },
+      { en: "tongue", pt: "língua", emoji: "👅" },
+      { en: "chin", pt: "queixo", emoji: "🧔" }
+    ];
+
+    const BODY_PARTS = [
+      { en: "head", pt: "cabeça", emoji: "🧒" },
+      { en: "neck", pt: "pescoço", emoji: "🧣" },
+      { en: "shoulder", pt: "ombro", emoji: "🤷‍♀️" },
+      { en: "chest", pt: "peito / tórax", emoji: "👕" },
+      { en: "hand", pt: "mão", emoji: "✋" },
+      { en: "belly", pt: "barriga", emoji: "🤰" },
+      { en: "leg", pt: "perna", emoji: "🦵" },
+      { en: "knee", pt: "joelho", emoji: "🧎" },
+      { en: "calf", pt: "panturrilha", emoji: "🦿" },
+      { en: "feet", pt: "pés", emoji: "🦶" },
+      { en: "toes", pt: "dedos do pé", emoji: "👣" }
+    ];
+
+    const UNSCRAMBLE_ITEMS = [
+      { scrambled: "LELYB", answer: "belly", pt: "barriga", emoji: "🤰" },
+      { scrambled: "NGUOTE", answer: "tongue", pt: "língua", emoji: "👅" },
+      { scrambled: "EETF", answer: "feet", pt: "pés", emoji: "🦶" },
+      { scrambled: "AIHR", answer: "hair", pt: "cabelo", emoji: "💇‍♀️" },
+      { scrambled: "DNAH", answer: "hand", pt: "mão", emoji: "✋" },
+      { scrambled: "NEEK", answer: "knee", pt: "joelho", emoji: "🧎" },
+      { scrambled: "EEY", answer: "eye", pt: "olho", emoji: "👁️" },
+      { scrambled: "ETSO", answer: "toes", pt: "dedos do pé", emoji: "👣" },
+      { scrambled: "FACL", answer: "calf", pt: "panturrilha", emoji: "🦵" }
+    ];
+
+    const ALL_PARTS = [...HEAD_PARTS, ...BODY_PARTS];
+    let score = 0;
+    let matchList = [];
+    let matchIdx = 0;
+    let matchAnswered = false;
+    let unscIdx = 0;
+    let unscSolved = false;
+
+    function updateScore(pts) {
+      score += pts;
+      let stars = 0;
+      if (score >= 50) stars = 1;
+      if (score >= 120) stars = 2;
+      if (score >= 180) stars = 3;
+      if (stars > 0) saveStars('game2', stars);
+      document.getElementById('gameScore').textContent = `Pontos: ${score} | ⭐ ${getStars('game2')}/3`;
+    }
+
+    function switchTab(id, btn) {
+      document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function renderStudy() {
+      document.getElementById('headGrid').innerHTML = HEAD_PARTS.map(p => `
+        <div class="body-card">
+          <div style="font-size:2.4rem;">${p.emoji}</div>
+          <div style="font-weight:800; font-size:1.05rem;">${p.en}</div>
+          <div style="font-size:0.85rem; color:var(--muted);">${p.pt}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('bodyGrid').innerHTML = BODY_PARTS.map(p => `
+        <div class="body-card">
+          <div style="font-size:2.4rem;">${p.emoji}</div>
+          <div style="font-weight:800; font-size:1.05rem;">${p.en}</div>
+          <div style="font-size:0.85rem; color:var(--muted);">${p.pt}</div>
+        </div>
+      `).join('');
+    }
+
+    function initMatch() {
+      matchList = [...ALL_PARTS].sort(() => Math.random() - 0.5).slice(0, 12);
+      matchIdx = 0;
+      loadMatch();
+    }
+
+    function loadMatch() {
+      matchAnswered = false;
+      const fb = document.getElementById('matchFeedback');
+      fb.className = 'feedback-box';
+      fb.style.display = 'none';
+      document.getElementById('matchNextRow').style.display = 'none';
+
+      if (matchIdx >= matchList.length) {
+        document.getElementById('matchCounter').textContent = 'Concluído!';
+        document.getElementById('matchEmoji').textContent = '🏅';
+        document.getElementById('matchClue').textContent = 'Você mandou super bem no Match the Body Parts!';
+        document.getElementById('matchOptions').innerHTML = `<button class="btn btn-secondary" style="grid-column:span 2;" onclick="initMatch()">🔄 Jogar Novamente</button>`;
+        return;
+      }
+
+      const curr = matchList[matchIdx];
+      document.getElementById('matchCounter').textContent = `Pergunta ${matchIdx + 1} de ${matchList.length}`;
+      document.getElementById('matchEmoji').textContent = curr.emoji;
+      document.getElementById('matchClue').textContent = `Como se escreve "${curr.pt}" em inglês?`;
+
+      const others = ALL_PARTS.filter(x => x.en !== curr.en).sort(() => Math.random() - 0.5).slice(0, 3);
+      const opts = [curr, ...others].sort(() => Math.random() - 0.5);
+
+      document.getElementById('matchOptions').innerHTML = opts.map(o => `
+        <button class="opt-btn" onclick="answerMatch(this, '${o.en}', '${curr.en}')">${o.en}</button>
+      `).join('');
+    }
+
+    function answerMatch(btn, chosen, correct) {
+      if (matchAnswered) return;
+      matchAnswered = true;
+      document.querySelectorAll('#matchOptions .opt-btn').forEach(b => b.disabled = true);
+
+      const fb = document.getElementById('matchFeedback');
+      if (chosen === correct) {
+        btn.classList.add('correct');
+        updateScore(10);
+        fb.innerHTML = `✅ SUCESSO! "${correct}" é a resposta certa! (+10 pts)`;
+        fb.className = 'feedback-box feedback-ok';
+      } else {
+        btn.classList.add('wrong');
+        document.querySelectorAll('#matchOptions .opt-btn').forEach(b => {
+          if (b.textContent === correct) b.classList.add('correct');
+        });
+        fb.innerHTML = `❌ ERRO! Você marcou "${chosen}", mas a resposta certa é "<strong>${correct}</strong>".`;
+        fb.className = 'feedback-box feedback-err';
+      }
+      document.getElementById('matchNextRow').style.display = 'flex';
+    }
+
+    function advanceMatch() {
+      matchIdx++;
+      loadMatch();
+    }
+
+    function loadUnscramble() {
+      unscSolved = false;
+      const fb = document.getElementById('unscrambleFeedback');
+      fb.className = 'feedback-box';
+      fb.style.display = 'none';
+      document.getElementById('unscrambleNextRow').style.display = 'none';
+      document.getElementById('unscrambleActions').style.display = 'flex';
+
+      const inp = document.getElementById('unscrambleInput');
+      inp.value = '';
+      inp.disabled = false;
+
+      if (unscIdx >= UNSCRAMBLE_ITEMS.length) {
+        document.getElementById('unscrambleCounter').textContent = 'Todos os 9 resolvidos!';
+        document.getElementById('unscrambleEmoji').textContent = '🎉🏆';
+        document.getElementById('unscrambleHint').textContent = 'Parabéns, Marina! Você desembaralhou todas as palavras do livro!';
+        document.getElementById('scrambledTiles').innerHTML = `<button class="btn btn-secondary" onclick="unscIdx=0; loadUnscramble();">🔄 Jogar de Novo</button>`;
+        inp.style.display = 'none';
+        document.getElementById('unscrambleActions').style.display = 'none';
+        return;
+      }
+
+      inp.style.display = 'inline-block';
+      const item = UNSCRAMBLE_ITEMS[unscIdx];
+      document.getElementById('unscrambleCounter').textContent = `Palavra ${unscIdx + 1} de ${UNSCRAMBLE_ITEMS.length}`;
+      document.getElementById('unscrambleEmoji').textContent = item.emoji;
+      document.getElementById('unscrambleHint').textContent = `Dica em português: ${item.pt}`;
+
+      document.getElementById('scrambledTiles').innerHTML = item.scrambled.split('').map(ch => `
+        <div class="tile" onclick="appendLetter('${ch}')">${ch}</div>
+      `).join('');
+    }
+
+    function appendLetter(ch) {
+      if (unscSolved) return;
+      const inp = document.getElementById('unscrambleInput');
+      inp.value += ch.toLowerCase();
+      inp.focus();
+    }
+
+    function checkUnscramble() {
+      if (unscIdx >= UNSCRAMBLE_ITEMS.length || unscSolved) return;
+      const item = UNSCRAMBLE_ITEMS[unscIdx];
+      const val = document.getElementById('unscrambleInput').value.trim().toLowerCase();
+      const fb = document.getElementById('unscrambleFeedback');
+
+      if (!val) {
+        fb.innerHTML = `⚠️ ERRO: Digite ou clique nas letras para formar a palavra antes de conferir!`;
+        fb.className = 'feedback-box feedback-err';
+        return;
+      }
+
+      if (val === item.answer) {
+        unscSolved = true;
+        updateScore(15);
+        document.getElementById('unscrambleInput').disabled = true;
+        document.getElementById('unscrambleActions').style.display = 'none';
+        fb.innerHTML = `✅ SUCESSO! ${item.scrambled} forma a palavra <strong>${item.answer.toUpperCase()}</strong>! (+15 pts)`;
+        fb.className = 'feedback-box feedback-ok';
+        document.getElementById('unscrambleNextRow').style.display = 'flex';
+      } else {
+        fb.innerHTML = `❌ ERRO: "${val}" não está correto! Tente novamente (dica: começa com "<strong>${item.answer[0].toUpperCase()}</strong>" e tem <strong>${item.answer.length}</strong> letras).`;
+        fb.className = 'feedback-box feedback-err';
+      }
+    }
+
+    function advanceUnscramble() {
+      unscIdx++;
+      loadUnscramble();
+    }
+
+    document.getElementById('unscrambleInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (unscSolved) advanceUnscramble();
+        else checkUnscramble();
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateScore(0);
+      renderStudy();
+      initMatch();
+      loadUnscramble();
+    });
+  </script>
+</body>
+</html>

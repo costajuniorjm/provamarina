@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subportal de Inglês - Portal da Marina</title>
+  
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --primary: #6C5CE7;
+    --primary-dark: #5649C0;
+    --secondary: #00CEC9;
+    --accent: #FD79A8;
+    --yellow: #FDCB6E;
+    --green: #00B894;
+    --red: #FF7675;
+    --bg: #F4F7FE;
+    --card: #FFFFFF;
+    --text: #2D3436;
+    --muted: #636E72;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #E0C3FC 0%, #8EC5FC 100%);
+    min-height: 100vh;
+    color: var(--text);
+    padding: 20px;
+  }
+
+  h1, h2, h3, .brand {
+    font-family: 'Fredoka', sans-serif;
+  }
+
+  .container {
+    max-width: 1050px;
+    margin: 0 auto;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    padding: 14px 24px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+  }
+
+  .btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.12);
+  }
+
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-secondary { background: var(--secondary); color: #fff; }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .btn-yellow { background: var(--yellow); color: #2D3436; }
+  .btn-green { background: var(--green); color: #fff; }
+  .btn-light { background: #EDF2F7; color: var(--text); }
+
+  .panel {
+    background: var(--card);
+    border-radius: 26px;
+    padding: 28px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+  }
+
+  .score-pill {
+    background: #FFF3CD;
+    color: #856404;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-family: 'Fredoka', sans-serif;
+    border: 2px solid #FFEEBA;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .feedback-box {
+    margin-top: 16px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    display: none;
+    text-align: center;
+  }
+  .feedback-ok { background: #D4EDDA; color: #155724; border: 2px solid #C3E6CB; display: block; }
+  .feedback-err { background: #F8D7DA; color: #721C24; border: 2px solid #F5C6CB; display: block; }
+
+  @keyframes pop {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+  .pop { animation: pop 0.25s ease; }
+</style>
+
+  <style>
+    .sub-header {
+      background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+      color: white;
+      border-radius: 26px;
+      padding: 32px;
+      margin-bottom: 26px;
+      box-shadow: 0 12px 30px rgba(108, 92, 231, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .sub-header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 6px;
+    }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 22px;
+    }
+    .game-card {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-top: 8px solid var(--primary);
+      transition: transform 0.2s ease;
+    }
+    .game-card:hover {
+      transform: translateY(-5px);
+    }
+    .game-card:nth-child(2) { border-top-color: var(--secondary); }
+    .game-card:nth-child(3) { border-top-color: var(--accent); }
+    .game-card:nth-child(4) { border-top-color: var(--green); }
+
+    .game-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .game-emoji {
+      font-size: 2.8rem;
+    }
+    .stars-display {
+      font-size: 1.2rem;
+      background: #FFF9DB;
+      padding: 5px 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      color: #E67E22;
+    }
+    .game-card h2 {
+      font-size: 1.45rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .game-card p {
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .topics-list {
+      list-style: none;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: #4A5568;
+    }
+    .topics-list li {
+      margin-bottom: 5px;
+      padding-left: 20px;
+      position: relative;
+    }
+    .topics-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <a href="index.html" class="brand">🚀 Portal da Marina</a>
+      <div class="nav-buttons">
+        <a href="index.html" class="btn btn-light">🏠 Capa do Portal</a>
+        <div class="score-pill" id="subTotalStars">⭐ 0 / 12 Estrelas</div>
+      </div>
+    </header>
+
+    <section class="sub-header">
+      <div>
+        <span class="badge" style="background:rgba(255,255,255,0.25); color:#fff; margin-bottom:8px;">3º Ano • Livro Único English</span>
+        <h1>English Mission Center</h1>
+        <p style="font-size:1.08rem; opacity:0.95;">Complete os 4 desafios de leitura e escrita baseados no seu livro para gabaritar a prova!</p>
+      </div>
+      <div style="font-size: 4rem;">🏆📖</div>
+    </section>
+
+    <section class="games-grid">
+      <!-- JOGO 1 -->
+      <article class="game-card">
+        <div>
+          <div class="game-top">
+            <span class="game-emoji">🥗🍔</span>
+            <span class="stars-display" id="stars-game1">☆☆☆</span>
+          </div>
+          <h2>1. Super Food & Healthy Chef</h2>
+          <p>Relacione as colunas com todas as 41 comidas e frutas do livro, acerte o Quiz e classifique em <strong>healthy</strong> ou <strong>unhealthy</strong>!</p>
+          <ul class="topics-list">
+            <li>Relacionar Colunas (todas as 41 comidas e frutas do material).</li>
+            <li>Quiz visual de múltipla escolha.</li>
+            <li>Classificação escrita: "... is healthy" vs "... is unhealthy".</li>
+          </ul>
+        </div>
+        <a href="jogo1_comidas.html" class="btn btn-primary" style="width:100%;">▶️ Jogar Agora</a>
+      </article>
+
+      <!-- JOGO 2 -->
+      <article class="game-card">
+        <div>
+          <div class="game-top">
+            <span class="game-emoji">🧍‍♀️👀</span>
+            <span class="stars-display" id="stars-game2">☆☆☆</span>
+          </div>
+          <h2>2. Body & Head Detective</h2>
+          <p>Descubra todas as partes da cabeça, do rosto e do corpo e desembaralhe as letras secretas (Unscramble)!</p>
+          <ul class="topics-list">
+            <li>Head parts: hair, eyebrow, forehead, eyes, ear, nose, cheek, mouth, teeth, tongue, chin.</li>
+            <li>Body parts: neck, chest, shoulder, hand, belly, leg, knee, calf, feet, toes.</li>
+            <li>Desafio anagrama escrito igual ao livro (LELYB → BELLY, etc.).</li>
+          </ul>
+        </div>
+        <a href="jogo2_corpo.html" class="btn btn-secondary" style="width:100%;">▶️ Jogar Agora</a>
+      </article>
+
+      <!-- JOGO 3 -->
+      <article class="game-card">
+        <div>
+          <div class="game-top">
+            <span class="game-emoji">🧩✏️</span>
+            <span class="stars-display" id="stars-game3">☆☆☆</span>
+          </div>
+          <h2>3. Super Crossword (Cruzadinha)</h2>
+          <p>Uma palavra cruzada interativa super divertida para treinar a escrita correta das palavras das unidades!</p>
+          <ul class="topics-list">
+            <li>Cruzamento de comidas, frutas, partes do corpo e adjetivos.</li>
+            <li>Teclado inteligente: pula automaticamente para a próxima letra!</li>
+            <li>Botão de dica e verificação instantânea.</li>
+          </ul>
+        </div>
+        <a href="jogo3_cruzadinha.html" class="btn btn-accent" style="width:100%;">▶️ Jogar Agora</a>
+      </article>
+
+      <!-- JOGO 4 -->
+      <article class="game-card">
+        <div>
+          <div class="game-top">
+            <span class="game-emoji">🎨⭐</span>
+            <span class="stars-display" id="stars-game4">☆☆☆</span>
+          </div>
+          <h2>4. Adjectives & Quantities Lab</h2>
+          <p>Organize os 12 adjetivos nas colunas certas e compare quantidades com <strong>MORE (Bigger)</strong> e <strong>LESS (Smaller)</strong>!</p>
+          <ul class="topics-list">
+            <li>Adjectives: beautiful, five, hairy, ten, wet, blue, huge, smooth, tiny, loud, orange, shiny.</li>
+            <li>Categorias: How many, What size, What color, How it sounds/feels, How it looks.</li>
+            <li>Quantities: More means Bigger / Less means Smaller.</li>
+          </ul>
+        </div>
+        <a href="jogo4_adjetivos.html" class="btn btn-green" style="width:100%;">▶️ Jogar Agora</a>
+      </article>
+    </section>
+  </div>
+
+  
+<script>
+  function saveStars(gameKey, stars) {
+    const data = JSON.parse(localStorage.getItem('marina_portal_3ano') || '{}');
+    if (!data[gameKey] || stars > data[gameKey]) {
+      data[gameKey] = stars;
+      localStorage.setItem('marina_portal_3ano', JSON.stringify(data));
+    }
+  }
+
+  function getStars(gameKey) {
+    const data = JSON.parse(localStorage.getItem('marina_portal_3ano') || '{}');
+    return data[gameKey] || 0;
+  }
+</script>
+
+  <script>
+    function renderStars(n) {
+      return '★'.repeat(n) + '☆'.repeat(3 - n);
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      let total = 0;
+      ['game1', 'game2', 'game3', 'game4'].forEach(g => {
+        const s = getStars(g);
+        total += s;
+        document.getElementById('stars-' + g).textContent = renderStars(s);
+      });
+      document.getElementById('subTotalStars').textContent = `⭐ ${total} / 12 Estrelas`;
+    });
+  </script>
+</body>
+</html>

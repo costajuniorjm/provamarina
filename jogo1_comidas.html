@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo 1: Super Food & Healthy Chef - Inglês 3º Ano</title>
+  
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --primary: #6C5CE7;
+    --primary-dark: #5649C0;
+    --secondary: #00CEC9;
+    --accent: #FD79A8;
+    --yellow: #FDCB6E;
+    --green: #00B894;
+    --red: #FF7675;
+    --bg: #F4F7FE;
+    --card: #FFFFFF;
+    --text: #2D3436;
+    --muted: #636E72;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #E0C3FC 0%, #8EC5FC 100%);
+    min-height: 100vh;
+    color: var(--text);
+    padding: 20px;
+  }
+
+  h1, h2, h3, .brand {
+    font-family: 'Fredoka', sans-serif;
+  }
+
+  .container {
+    max-width: 1050px;
+    margin: 0 auto;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    padding: 14px 24px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+  }
+
+  .btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.12);
+  }
+
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-secondary { background: var(--secondary); color: #fff; }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .btn-yellow { background: var(--yellow); color: #2D3436; }
+  .btn-green { background: var(--green); color: #fff; }
+  .btn-light { background: #EDF2F7; color: var(--text); }
+
+  .panel {
+    background: var(--card);
+    border-radius: 26px;
+    padding: 28px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+  }
+
+  .score-pill {
+    background: #FFF3CD;
+    color: #856404;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-family: 'Fredoka', sans-serif;
+    border: 2px solid #FFEEBA;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .feedback-box {
+    margin-top: 16px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    display: none;
+    text-align: center;
+  }
+  .feedback-ok { background: #D4EDDA; color: #155724; border: 2px solid #C3E6CB; display: block; }
+  .feedback-err { background: #F8D7DA; color: #721C24; border: 2px solid #F5C6CB; display: block; }
+
+  @keyframes pop {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+  .pop { animation: pop 0.25s ease; }
+</style>
+
+  <style>
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 12px 20px;
+      border-radius: 16px;
+      border: 3px solid transparent;
+      background: white;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--muted);
+      transition: 0.2s;
+    }
+    .tab-btn.active {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #F3F0FF;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Relacionar Colunas (Todas as 41 palavras divididas em 6 rodadas completas) */
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+      background: #F8FAFC;
+      padding: 12px 18px;
+      border-radius: 16px;
+      border: 2px solid #E2E8F0;
+    }
+    .round-dots {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .round-pill {
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      background: #EDF2F7;
+      color: var(--muted);
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .round-pill.current {
+      background: #F3F0FF;
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    .round-pill.done {
+      background: #D4EDDA;
+      color: #155724;
+    }
+    .columns-match-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    @media (max-width: 640px) {
+      .columns-match-area { grid-template-columns: 1fr; }
+    }
+    .match-col-title {
+      text-align: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.15rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .match-item {
+      width: 100%;
+      padding: 13px 16px;
+      margin-bottom: 10px;
+      border-radius: 16px;
+      border: 3px solid #E2E8F0;
+      background: white;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: 0.15s;
+      text-align: left;
+    }
+    .match-item:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #F8F7FF;
+      transform: translateY(-2px);
+    }
+    .match-item.selected {
+      border-color: var(--primary);
+      background: #EDE9FE;
+      color: var(--primary-dark);
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+    .match-item.matched {
+      border-color: var(--green);
+      background: #D4EDDA;
+      color: #155724;
+      cursor: default;
+      opacity: 0.85;
+    }
+    .match-item.wrong-flash {
+      border-color: var(--red);
+      background: #F8D7DA;
+      color: #721C24;
+    }
+
+    /* Quiz de Imagens */
+    .quiz-box {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    .big-emoji {
+      font-size: 5.5rem;
+      background: #FFF9DB;
+      width: 140px;
+      height: 140px;
+      line-height: 140px;
+      border-radius: 30px;
+      margin: 16px auto;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .opt-btn {
+      padding: 16px;
+      font-size: 1.2rem;
+      font-family: 'Fredoka', sans-serif;
+      border-radius: 18px;
+      border: 3px solid #E2E8F0;
+      background: white;
+      cursor: pointer;
+      transition: 0.15s;
+      font-weight: 600;
+    }
+    .opt-btn:hover {
+      border-color: var(--primary);
+      background: #F3F0FF;
+    }
+    .opt-btn.correct {
+      background: #00B894 !important;
+      color: white !important;
+      border-color: #00B894 !important;
+    }
+    .opt-btn.wrong {
+      background: #FF7675 !important;
+      color: white !important;
+      border-color: #FF7675 !important;
+    }
+
+    /* Healthy vs Unhealthy */
+    .healthy-card {
+      background: #F8FAFC;
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+      max-width: 620px;
+      margin: 0 auto;
+      border: 3px solid #E2E8F0;
+    }
+    .sentence-preview {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin: 16px 0;
+      color: var(--primary);
+      background: white;
+      padding: 12px;
+      border-radius: 14px;
+      border: 2px dashed #CBD5E0;
+    }
+    .choice-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <a href="ingles.html" class="brand">⬅️ Voltar para Inglês</a>
+      <div class="nav-buttons">
+        <a href="index.html" class="btn btn-light">🏠 Capa</a>
+        <div class="score-pill" id="gameScore">Pontos: 0 | ⭐ 0/3</div>
+      </div>
+    </header>
+
+    <div class="panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+        <div>
+          <span class="badge" style="background:#E8F8F5; color:#00B894;">Jogo 1 • Food & Fruits</span>
+          <h1 style="font-size:1.9rem; color:var(--primary); margin-top:4px;">🥗 Super Food & Healthy Chef</h1>
+        </div>
+        <p style="color:var(--muted); max-width:440px;">Reforce todo o vocabulário escrito relacionando as colunas das 41 comidas e frutas, fazendo o Quiz e classificando em <strong>Healthy</strong> ou <strong>Unhealthy</strong>!</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-columns', this)">1️⃣ Relacionar Colunas (41 palavras)</button>
+        <button class="tab-btn" onclick="switchTab('tab-quiz', this)">2️⃣ Quiz: Qual é a comida/fruta?</button>
+        <button class="tab-btn" onclick="switchTab('tab-healthy', this)">3️⃣ Healthy ou Unhealthy?</button>
+      </div>
+
+      <!-- TAB 1: RELACIONAR COLUNAS (CONTEMPLA TODAS AS 41 PALAVRAS EM 6 RODADAS) -->
+      <div id="tab-columns" class="tab-content active">
+        <div class="match-header">
+          <div>
+            <strong style="color:var(--primary);" id="roundTitle">Rodada 1 de 6</strong>
+            <div style="font-size:0.9rem; color:var(--muted);">Clique na palavra em <strong>Inglês</strong> (esquerda) e depois na tradução/figura correspondente (direita)!</div>
+          </div>
+          <div class="round-dots" id="roundDots"></div>
+        </div>
+
+        <div class="columns-match-area">
+          <div>
+            <div class="match-col-title">📝 English (Inglês)</div>
+            <div id="leftColumn"></div>
+          </div>
+          <div>
+            <div class="match-col-title">🖼️ Figura & Português</div>
+            <div id="rightColumn"></div>
+          </div>
+        </div>
+
+        <div id="colFeedback" class="feedback-box"></div>
+      </div>
+
+      <!-- TAB 2: QUIZ DE VOCABULÁRIO -->
+      <div id="tab-quiz" class="tab-content">
+        <div class="quiz-box">
+          <div style="text-align:center;">
+            <span class="badge" style="background:#EDF2F7;" id="quizCounter">Pergunta 1 de 15</span>
+          </div>
+          <div class="big-emoji" id="quizEmoji">🥞</div>
+          <h2 id="quizPrompt">Qual é o nome deste alimento em inglês?</h2>
+          <div class="options-grid" id="quizOptions"></div>
+          <div id="quizFeedback" class="feedback-box"></div>
+        </div>
+      </div>
+
+      <!-- TAB 3: HEALTHY OR UNHEALTHY -->
+      <div id="tab-healthy" class="tab-content">
+        <div class="healthy-card">
+          <span class="badge" style="background:#FFF3CD; color:#856404;" id="healthyCounter">Desafio 1 de 10</span>
+          <div class="big-emoji" id="healthyEmoji">🥑</div>
+          <h2 id="healthyName" style="font-size:1.8rem;">Avocado</h2>
+          <div class="sentence-preview" id="healthySentence">Avocado is __________.</div>
+          <div class="choice-row">
+            <button class="btn btn-green" style="font-size:1.2rem; padding:16px 28px;" onclick="answerHealthy('healthy')">🥦 Healthy (Saudável)</button>
+            <button class="btn btn-accent" style="font-size:1.2rem; padding:16px 28px;" onclick="answerHealthy('unhealthy')">🍟 Unhealthy (Não saudável)</button>
+          </div>
+          <div id="healthyFeedback" class="feedback-box"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+<script>
+  function saveStars(gameKey, stars) {
+    const data = JSON.parse(localStorage.getItem('marina_portal_3ano') || '{}');
+    if (!data[gameKey] || stars > data[gameKey]) {
+      data[gameKey] = stars;
+      localStorage.setItem('marina_portal_3ano', JSON.stringify(data));
+    }
+  }
+
+  function getStars(gameKey) {
+    const data = JSON.parse(localStorage.getItem('marina_portal_3ano') || '{}');
+    return data[gameKey] || 0;
+  }
+</script>
+
+  <script>
+    // 100% do vocabulário das imagens de comidas, frutas e exercícios (41 palavras divididas em 6 rodadas completas)
+    const FOOD_ROUNDS = [
+      // Rodada 1: Comidas 1 (7 itens)
+      [
+        { en: "pancake", pt: "panqueca", emoji: "🥞" },
+        { en: "ham", pt: "presunto", emoji: "🍖" },
+        { en: "pasta", pt: "macarrão", emoji: "🍝" },
+        { en: "bean", pt: "feijão", emoji: "🫘" },
+        { en: "mushroom", pt: "cogumelo", emoji: "🍄" },
+        { en: "pie", pt: "torta", emoji: "🥧" },
+        { en: "chicken", pt: "frango", emoji: "🍗" }
+      ],
+      // Rodada 2: Comidas 2 (7 itens)
+      [
+        { en: "juice", pt: "suco", emoji: "🧃" },
+        { en: "cereal", pt: "cereal", emoji: "🥣" },
+        { en: "bagel", pt: "rosquinha de pão (bagel)", emoji: "🥯" },
+        { en: "hot dog", pt: "cachorro-quente", emoji: "🌭" },
+        { en: "cheese", pt: "queijo", emoji: "🧀" },
+        { en: "chocolate", pt: "chocolate", emoji: "🍫" },
+        { en: "tomato", pt: "tomate", emoji: "🍅" }
+      ],
+      // Rodada 3: Comidas 3 (7 itens)
+      [
+        { en: "ice cream", pt: "sorvete", emoji: "🍨" },
+        { en: "corn", pt: "milho", emoji: "🌽" },
+        { en: "bread", pt: "pão", emoji: "🍞" },
+        { en: "yogurt", pt: "iogurte", emoji: "🥛" },
+        { en: "lettuce", pt: "alface", emoji: "🥬" },
+        { en: "egg", pt: "ovo", emoji: "🥚" },
+        { en: "milk", pt: "leite", emoji: "🥛" }
+      ],
+      // Rodada 4: Comidas 4 + Exercício Healthy/Unhealthy (7 itens)
+      [
+        { en: "butter", pt: "manteiga", emoji: "🧈" },
+        { en: "french fries", pt: "batata frita", emoji: "🍟" },
+        { en: "hamburger", pt: "hambúrguer", emoji: "🍔" },
+        { en: "carrot", pt: "cenoura", emoji: "🥕" },
+        { en: "salmon", pt: "salmão", emoji: "🐟" },
+        { en: "banana", pt: "banana", emoji: "🍌" },
+        { en: "grape", pt: "uva", emoji: "🍇" }
+      ],
+      // Rodada 5: Frutas 1 (7 itens)
+      [
+        { en: "peach", pt: "pêssego", emoji: "🍑" },
+        { en: "papaya", pt: "mamão", emoji: "🧡" },
+        { en: "watermelon", pt: "melancia", emoji: "🍉" },
+        { en: "coconut", pt: "coco", emoji: "🥥" },
+        { en: "pear", pt: "pera", emoji: "🍐" },
+        { en: "apple", pt: "maçã", emoji: "🍎" },
+        { en: "cherry", pt: "cereja", emoji: "🍒" }
+      ],
+      // Rodada 6: Frutas 2 (6 itens) -> Total: 7+7+7+7+7+6 = 41 palavras!
+      [
+        { en: "pineapple", pt: "abacaxi", emoji: "🍍" },
+        { en: "avocado", pt: "abacate", emoji: "🥑" },
+        { en: "mango", pt: "manga", emoji: "🥭" },
+        { en: "strawberry", pt: "morango", emoji: "🍓" },
+        { en: "raspberry", pt: "framboesa", emoji: "🫐" },
+        { en: "blueberry", pt: "mirtilo", emoji: "🫐" }
+      ]
+    ];
+
+    const ALL_FOODS = FOOD_ROUNDS.flat();
+
+    const HEALTHY_ITEMS = [
+      { en: "Avocado", emoji: "🥑", type: "healthy" },
+      { en: "French fries", emoji: "🍟", type: "unhealthy" },
+      { en: "Hamburger", emoji: "🍔", type: "unhealthy" },
+      { en: "Carrot", emoji: "🥕", type: "healthy" },
+      { en: "Apple", emoji: "🍎", type: "healthy" },
+      { en: "Salmon", emoji: "🐟", type: "healthy" },
+      { en: "Ice cream", emoji: "🍦", type: "unhealthy" },
+      { en: "Tomato", emoji: "🍅", type: "healthy" },
+      { en: "Hot dog", emoji: "🌭", type: "unhealthy" },
+      { en: "Watermelon", emoji: "🍉", type: "healthy" }
+    ];
+
+    let score = 0;
+    let currentRound = 0;
+    let completedRounds = new Set();
+    let selectedLeft = null;
+    let selectedRight = null;
+    let matchedInRound = 0;
+
+    let quizList = [];
+    let quizIdx = 0;
+    let quizLocked = false;
+
+    let healthyIdx = 0;
+    let healthyLocked = false;
+
+    function updateScore(pts) {
+      score += pts;
+      let stars = 0;
+      if (score >= 80) stars = 1;
+      if (score >= 180) stars = 2;
+      if (score >= 280) stars = 3;
+      if (stars > 0) saveStars('game1', stars);
+      const saved = getStars('game1');
+      document.getElementById('gameScore').textContent = `Pontos: ${score} | ⭐ ${saved}/3`;
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function shuffle(arr) {
+      return [...arr].sort(() => Math.random() - 0.5);
+    }
+
+    // --- JOGO DE RELACIONAR COLUNAS ---
+    function renderRoundDots() {
+      const dots = document.getElementById('roundDots');
+      dots.innerHTML = FOOD_ROUNDS.map((_, idx) => {
+        let cls = 'round-pill';
+        if (idx === currentRound) cls += ' current';
+        else if (completedRounds.has(idx)) cls += ' done';
+        return `<button class="${cls}" onclick="loadRound(${idx})">Parte ${idx + 1} ${completedRounds.has(idx) ? '✓' : ''}</button>`;
+      }).join('');
+    }
+
+    function loadRound(rIdx) {
+      currentRound = rIdx;
+      selectedLeft = null;
+      selectedRight = null;
+      matchedInRound = 0;
+      const fb = document.getElementById('colFeedback');
+      fb.style.display = 'none';
+
+      const items = FOOD_ROUNDS[rIdx];
+      document.getElementById('roundTitle').textContent = `Parte ${rIdx + 1} de ${FOOD_ROUNDS.length} (${items.length} alimentos)`;
+      renderRoundDots();
+
+      const leftItems = shuffle(items);
+      const rightItems = shuffle(items);
+
+      document.getElementById('leftColumn').innerHTML = leftItems.map(item => `
+        <button class="match-item" data-en="${item.en}" onclick="selectLeft(this)">
+          <span>${item.en}</span>
+          <span style="color:#CBD5E0;">●</span>
+        </button>
+      `).join('');
+
+      document.getElementById('rightColumn').innerHTML = rightItems.map(item => `
+        <button class="match-item" data-en="${item.en}" onclick="selectRight(this)">
+          <span>${item.emoji} ${item.pt}</span>
+          <span style="color:#CBD5E0;">●</span>
+        </button>
+      `).join('');
+    }
+
+    function selectLeft(btn) {
+      if (btn.classList.contains('matched')) return;
+      document.querySelectorAll('#leftColumn .match-item').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedLeft = btn;
+      tryMatchColumns();
+    }
+
+    function selectRight(btn) {
+      if (btn.classList.contains('matched')) return;
+      document.querySelectorAll('#rightColumn .match-item').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedRight = btn;
+      tryMatchColumns();
+    }
+
+    function tryMatchColumns() {
+      if (!selectedLeft || !selectedRight) return;
+      const fb = document.getElementById('colFeedback');
+      const en1 = selectedLeft.dataset.en;
+      const en2 = selectedRight.dataset.en;
+
+      if (en1 === en2) {
+        selectedLeft.classList.remove('selected');
+        selectedRight.classList.remove('selected');
+        selectedLeft.classList.add('matched');
+        selectedRight.classList.add('matched');
+        selectedLeft.disabled = true;
+        selectedRight.disabled = true;
+        selectedLeft = null;
+        selectedRight = null;
+        matchedInRound++;
+        updateScore(5);
+
+        const totalInRound = FOOD_ROUNDS[currentRound].length;
+        if (matchedInRound === totalInRound) {
+          completedRounds.add(currentRound);
+          renderRoundDots();
+          if (completedRounds.size === FOOD_ROUNDS.length) {
+            fb.innerHTML = `🏆 INCRÍVEL, MARINA! Você relacionou TODAS as 41 comidas e frutas do livro!`;
+            fb.className = 'feedback-box feedback-ok';
+          } else {
+            const nextR = (currentRound + 1) % FOOD_ROUNDS.length;
+            fb.innerHTML = `🎉 Parte ${currentRound + 1} concluída! <button class="btn btn-primary" style="margin-left:10px; padding:6px 14px;" onclick="loadRound(${nextR})">Próxima Parte ➡️</button>`;
+            fb.className = 'feedback-box feedback-ok';
+          }
+        } else {
+          fb.textContent = `✅ Par perfeito: "${en1}"! (+5 pts)`;
+          fb.className = 'feedback-box feedback-ok';
+        }
+      } else {
+        const lBtn = selectedLeft;
+        const rBtn = selectedRight;
+        lBtn.classList.add('wrong-flash');
+        rBtn.classList.add('wrong-flash');
+        selectedLeft = null;
+        selectedRight = null;
+        fb.textContent = `❌ Não combinou! Tente ligar "${en1}" com a figura certa.`;
+        fb.className = 'feedback-box feedback-err';
+        setTimeout(() => {
+          lBtn.classList.remove('selected', 'wrong-flash');
+          rBtn.classList.remove('selected', 'wrong-flash');
+        }, 650);
+      }
+    }
+
+    // --- QUIZ ---
+    function initQuiz() {
+      quizList = shuffle(ALL_FOODS).slice(0, 15);
+      quizIdx = 0;
+      loadQuizQuestion();
+    }
+
+    function loadQuizQuestion() {
+      quizLocked = false;
+      const fb = document.getElementById('quizFeedback');
+      fb.className = 'feedback-box';
+      fb.style.display = 'none';
+
+      if (quizIdx >= quizList.length) {
+        document.getElementById('quizCounter').textContent = 'Concluído!';
+        document.getElementById('quizEmoji').textContent = '🏆';
+        document.getElementById('quizPrompt').textContent = 'Parabéns, Marina! Você completou o Quiz de Comidas e Frutas!';
+        document.getElementById('quizOptions').innerHTML = `<button class="btn btn-primary" style="grid-column:span 2;" onclick="initQuiz()">🔄 Jogar Novamente</button>`;
+        return;
+      }
+
+      const current = quizList[quizIdx];
+      document.getElementById('quizCounter').textContent = `Pergunta ${quizIdx + 1} de ${quizList.length}`;
+      document.getElementById('quizEmoji').textContent = current.emoji;
+      document.getElementById('quizPrompt').textContent = `Qual é o nome em inglês? (${current.pt})`;
+
+      const distractors = shuffle(ALL_FOODS.filter(f => f.en !== current.en)).slice(0, 3);
+      const options = shuffle([current, ...distractors]);
+
+      const optContainer = document.getElementById('quizOptions');
+      optContainer.innerHTML = options.map(opt => `
+        <button class="opt-btn" onclick="checkQuizAnswer(this, '${opt.en}', '${current.en}')">${opt.en}</button>
+      `).join('');
+    }
+
+    function checkQuizAnswer(btn, chosen, correct) {
+      if (quizLocked) return;
+      quizLocked = true;
+      const fb = document.getElementById('quizFeedback');
+      if (chosen === correct) {
+        btn.classList.add('correct');
+        updateScore(10);
+        fb.textContent = `🎉 Muito bem! "${correct}" está certíssimo! (+10 pts)`;
+        fb.className = 'feedback-box feedback-ok';
+      } else {
+        btn.classList.add('wrong');
+        document.querySelectorAll('#quizOptions .opt-btn').forEach(b => {
+          if (b.textContent === correct) b.classList.add('correct');
+        });
+        fb.textContent = `Quase! A resposta certa é "${correct}".`;
+        fb.className = 'feedback-box feedback-err';
+      }
+      setTimeout(() => {
+        quizIdx++;
+        loadQuizQuestion();
+      }, 1400);
+    }
+
+    // --- HEALTHY / UNHEALTHY ---
+    function loadHealthyQuestion() {
+      healthyLocked = false;
+      const fb = document.getElementById('healthyFeedback');
+      fb.style.display = 'none';
+
+      if (healthyIdx >= HEALTHY_ITEMS.length) {
+        document.getElementById('healthyCounter').textContent = 'Missão Completa!';
+        document.getElementById('healthyEmoji').textContent = '👩‍🍳🌟';
+        document.getElementById('healthyName').textContent = 'Excelente trabalho, Chef Marina!';
+        document.getElementById('healthySentence').innerHTML = `Você acertou todas as frases de <strong>healthy</strong> e <strong>unhealthy</strong>!<br><br><button class="btn btn-primary" onclick="healthyIdx=0; loadHealthyQuestion();">🔄 Repetir Desafio</button>`;
+        return;
+      }
+
+      const item = HEALTHY_ITEMS[healthyIdx];
+      document.getElementById('healthyCounter').textContent = `Desafio ${healthyIdx + 1} de ${HEALTHY_ITEMS.length}`;
+      document.getElementById('healthyEmoji').textContent = item.emoji;
+      document.getElementById('healthyName').textContent = item.en;
+      document.getElementById('healthySentence').textContent = `${item.en} is __________.`;
+    }
+
+    function answerHealthy(choice) {
+      if (healthyLocked || healthyIdx >= HEALTHY_ITEMS.length) return;
+      healthyLocked = true;
+      const item = HEALTHY_ITEMS[healthyIdx];
+      const fullSentence = `${item.en} is ${item.type}.`;
+      document.getElementById('healthySentence').textContent = fullSentence;
+
+      const fb = document.getElementById('healthyFeedback');
+      if (choice === item.type) {
+        updateScore(10);
+        fb.textContent = `✅ Perfeito! "${fullSentence}" (+10 pts)`;
+        fb.className = 'feedback-box feedback-ok';
+      } else {
+        fb.textContent = `❌ Ops! O certo é: "${fullSentence}"`;
+        fb.className = 'feedback-box feedback-err';
+      }
+
+      setTimeout(() => {
+        healthyIdx++;
+        loadHealthyQuestion();
+      }, 1600);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateScore(0);
+      loadRound(0);
+      initQuiz();
+      loadHealthyQuestion();
+    });
+  </script>
+</body>
+</html>
