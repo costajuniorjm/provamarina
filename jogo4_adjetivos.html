@@ -287,6 +287,25 @@
       padding: 12px;
       border-radius: 16px;
       border: 2px solid #EDF2F7;
+      flex-wrap: wrap;
+    }
+    .star-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .blue-star-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      background: #E0F2FE;
+      color: #0284C7;
+      border: 2px solid #38BDF8;
+      font-size: 1.35rem;
+      line-height: 1;
     }
     .count-badge {
       background: #EDF2F7;
@@ -302,6 +321,22 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       margin-top: 18px;
+    }
+    .qty-translation {
+      margin-top: 8px;
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #00896B;
+      background: #E6FFFA;
+      border: 2px solid #B2F5EA;
+      border-radius: 12px;
+      padding: 8px 14px;
+      display: none;
+    }
+    .next-row {
+      margin-top: 14px;
+      display: none;
+      justify-content: center;
     }
   </style>
 </head>
@@ -369,8 +404,12 @@
           <span class="badge" style="background:#EDF2F7;" id="qtyCounter">Desafio 1 de 6</span>
           <div id="qtyVisual" style="margin:16px 0;"></div>
           <h2 id="qtySentence" style="font-size:1.35rem; color:var(--primary);">There are _______ yellow stars than blue stars.</h2>
+          <div id="qtyTranslation" class="qty-translation"></div>
           <div class="qty-options" id="qtyOptions"></div>
           <div id="qtyFeedback" class="feedback-box"></div>
+          <div id="qtyNextRow" class="next-row">
+            <button class="btn btn-green" onclick="advanceQty()">Próximo Desafio ➡️</button>
+          </div>
         </div>
       </div>
     </div>
@@ -410,20 +449,22 @@
 
     const QTY_QUESTIONS = [
       {
-        row1: "⭐⭐⭐⭐", count1: 4,
-        row2: "⭐⭐", count2: 2,
+        row1: "⭐⭐⭐⭐", count1: 4, label1: "Amarelas",
+        row2: '<span class="blue-star-icon">★</span><span class="blue-star-icon">★</span>', count2: 2, label2: "Azuis",
         prompt: "There are _______ yellow stars than blue stars.",
         options: ["MORE", "LESS", "SMALLER", "TINY"],
         answer: "MORE",
-        full: "There are MORE yellow stars than blue stars."
+        full: "There are MORE yellow stars than blue stars.",
+        translation: "🇧🇷 Tradução: Há MAIS estrelas amarelas do que estrelas azuis."
       },
       {
-        row1: "⭐⭐⭐⭐", count1: 4,
-        row2: "⭐⭐", count2: 2,
+        row1: "⭐⭐⭐⭐", count1: 4, label1: "Amarelas",
+        row2: '<span class="blue-star-icon">★</span><span class="blue-star-icon">★</span>', count2: 2, label2: "Azuis",
         prompt: "There are _______ blue stars than yellow stars.",
         options: ["MORE", "LESS", "BIGGER", "HUGE"],
         answer: "LESS",
-        full: "There are LESS blue stars than yellow stars."
+        full: "There are LESS blue stars than yellow stars.",
+        translation: "🇧🇷 Tradução: Há MENOS estrelas azuis do que estrelas amarelas."
       },
       {
         row1: "📈 MORE", count1: "?",
@@ -431,7 +472,8 @@
         prompt: "Complete a regra do livro: MORE means _______.",
         options: ["Bigger", "Smaller", "Less", "Tiny"],
         answer: "Bigger",
-        full: "More means Bigger."
+        full: "More means Bigger.",
+        translation: "🇧🇷 Tradução: Mais significa Maior."
       },
       {
         row1: "📉 LESS", count1: "?",
@@ -439,7 +481,8 @@
         prompt: "Complete a regra do livro: LESS means _______.",
         options: ["Bigger", "Smaller", "More", "Huge"],
         answer: "Smaller",
-        full: "Less means Smaller."
+        full: "Less means Smaller.",
+        translation: "🇧🇷 Tradução: Menos significa Menor."
       },
       {
         row1: "🍎🍎🍎🍎🍎", count1: 5,
@@ -447,7 +490,8 @@
         prompt: "There are _______ apples than bananas.",
         options: ["MORE", "LESS", "SMALLER", "BLUE"],
         answer: "MORE",
-        full: "There are MORE apples than bananas."
+        full: "There are MORE apples than bananas.",
+        translation: "🇧🇷 Tradução: Há MAIS maçãs do que bananas."
       },
       {
         row1: "🍓🍓", count1: 2,
@@ -455,7 +499,8 @@
         prompt: "There are _______ strawberries than grapes.",
         options: ["MORE", "LESS", "BIGGER", "HUGE"],
         answer: "LESS",
-        full: "There are LESS strawberries than grapes."
+        full: "There are LESS strawberries than grapes.",
+        translation: "🇧🇷 Tradução: Há MENOS morangos do que uvas."
       }
     ];
 
@@ -530,6 +575,10 @@
       qtyLocked = false;
       const fb = document.getElementById('qtyFeedback');
       fb.style.display = 'none';
+      const tr = document.getElementById('qtyTranslation');
+      tr.style.display = 'none';
+      tr.textContent = '';
+      document.getElementById('qtyNextRow').style.display = 'none';
 
       if (qtyIdx >= QTY_QUESTIONS.length) {
         document.getElementById('qtyCounter').textContent = 'Concluído!';
@@ -541,38 +590,60 @@
 
       const q = QTY_QUESTIONS[qtyIdx];
       document.getElementById('qtyCounter').textContent = `Desafio ${qtyIdx + 1} de ${QTY_QUESTIONS.length}`;
-      let vis = `<div class="stars-row"><span>${q.row1}</span>${q.count1 !== '?' ? `<span class="count-badge">${q.count1}</span>` : ''}</div>`;
+      const tag1 = q.label1 ? `<span class="badge" style="background:#FEF3C7; color:#92400E;">${q.label1}</span>` : '';
+      let vis = `<div class="stars-row">${tag1}<span class="star-group">${q.row1}</span>${q.count1 !== '?' ? `<span class="count-badge">${q.count1}</span>` : ''}</div>`;
       if (q.row2) {
-        vis += `<div class="stars-row"><span>${q.row2}</span><span class="count-badge">${q.count2}</span></div>`;
+        const tag2 = q.label2 ? `<span class="badge" style="background:#E0F2FE; color:#0369A1;">${q.label2}</span>` : '';
+        vis += `<div class="stars-row">${tag2}<span class="star-group">${q.row2}</span><span class="count-badge">${q.count2}</span></div>`;
       }
       document.getElementById('qtyVisual').innerHTML = vis;
       document.getElementById('qtySentence').textContent = q.prompt;
 
       document.getElementById('qtyOptions').innerHTML = q.options.map(opt => `
-        <button class="btn btn-light" style="font-size:1.15rem; padding:14px;" onclick="answerQty('${opt}')">${opt}</button>
+        <button class="btn btn-light" style="font-size:1.15rem; padding:14px;" id="qty-opt-${opt}" onclick="answerQty('${opt}')">${opt}</button>
       `).join('');
     }
 
     function answerQty(chosen) {
       if (qtyLocked || qtyIdx >= QTY_QUESTIONS.length) return;
-      qtyLocked = true;
       const q = QTY_QUESTIONS[qtyIdx];
-      document.getElementById('qtySentence').textContent = q.full;
-
       const fb = document.getElementById('qtyFeedback');
-      if (chosen === q.answer) {
-        updateScore(10);
-        fb.textContent = `✅ Certíssimo! "${q.full}" (+10 pts)`;
-        fb.className = 'feedback-box feedback-ok';
-      } else {
-        fb.textContent = `❌ Quase! O certo é: "${q.full}"`;
+      const btn = document.getElementById(`qty-opt-${chosen}`);
+
+      if (chosen !== q.answer) {
+        if (btn) {
+          btn.disabled = true;
+          btn.style.background = '#F8D7DA';
+          btn.style.color = '#721C24';
+          btn.style.border = '2px solid #F5C6CB';
+        }
+        fb.textContent = `⚠️ Atenção! "${chosen}" não está correto. Tente novamente até escolher a resposta certa!`;
         fb.className = 'feedback-box feedback-err';
+        return;
       }
 
-      setTimeout(() => {
-        qtyIdx++;
-        loadQty();
-      }, 1600);
+      qtyLocked = true;
+      document.getElementById('qtySentence').textContent = q.full;
+
+      const tr = document.getElementById('qtyTranslation');
+      tr.textContent = q.translation;
+      tr.style.display = 'block';
+
+      document.querySelectorAll('#qtyOptions button').forEach(b => b.disabled = true);
+      if (btn) {
+        btn.style.background = '#00B894';
+        btn.style.color = '#FFFFFF';
+      }
+
+      updateScore(10);
+      fb.textContent = `✅ Certíssimo! "${q.full}" (+10 pts)`;
+      fb.className = 'feedback-box feedback-ok';
+      document.getElementById('qtyNextRow').style.display = 'flex';
+    }
+
+    function advanceQty() {
+      qtyIdx++;
+      loadQty();
     }
 
     window.addEventListener('DOMContentLoaded', () => {
